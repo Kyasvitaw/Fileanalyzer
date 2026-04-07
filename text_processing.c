@@ -3,7 +3,7 @@
 #include"text_processing.h"
 #include"utils.h"
 
-void FindWord(FILE* fp, char word[]){
+int FindWord(FILE* fp, char word[]){
     
     int l=0;
     char line[200];
@@ -31,12 +31,10 @@ void FindWord(FILE* fp, char word[]){
         }
     }
 
-    if(flag==0){
-        printf("Not found\n");
-    }
+    return flag;
 }
 
-int countOccurnces(FILE* fp,char word[]){
+int countOccurences(FILE* fp,char word[]){
     
     char line[200];
     int flag = 0;
