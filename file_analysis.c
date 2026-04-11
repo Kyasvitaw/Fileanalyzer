@@ -34,4 +34,5 @@ int count_chars(FILE* fp){
             }
         }
     }
+    return c;
 }

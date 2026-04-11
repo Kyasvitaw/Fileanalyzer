@@ -80,7 +80,7 @@ void directoryTraversal(const char* path){
                 FILE* g;
                 g = safe_open("graph.dot","a+");
                 //add a directed edge here
-                fprintf(g,"\"%s\"->\"%s\"\n",dirname,entry->d_name);
+                fprintf(g,"\"%s\"->\"%s\";\n",dirname,entry->d_name);
                 fclose(g);
 
                 FILE* file;
@@ -90,6 +90,7 @@ void directoryTraversal(const char* path){
                 FILE* w;
                 w=safe_open("words.csv","a+");
                 int nw=count_words(file);
+                rewind(file);
                 fprintf(w,"%s,%d\n",entry->d_name,nw);
                 fclose(w);
 
@@ -97,8 +98,9 @@ void directoryTraversal(const char* path){
                 FILE* c;
                 c=safe_open("chars.csv","a+");
                 int nc=count_chars(file);
+                rewind(file);
                 fprintf(c,"%s,%d\n",entry->d_name,nc);
-                fclose(w);
+                fclose(c);
 
                 //lines.csv
                 FILE* l;
@@ -125,6 +127,7 @@ void directoryTraversal(const char* path){
             }
         }
     }
+    closedir(directory);
     
 }
 

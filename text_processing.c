@@ -18,7 +18,7 @@ int FindWord(FILE* fp, char word[]){
             int freq=1;
             int length=strlen(word);
             ptr=ptr+length;
-            while(!strstr(ptr,word)){
+            while(strstr(ptr,word)!=NULL){
                 ptr=ptr+length;
                 freq++;
             }
@@ -50,7 +50,7 @@ int countOccurences(FILE* fp,char word[]){
             int freq=1;
             int length=strlen(word);
             ptr=ptr+length;
-            while(!strstr(ptr,word)){
+            while(strstr(ptr,word)!=NULL){
                 ptr=ptr+length;
                 freq++;
             }
@@ -61,23 +61,35 @@ int countOccurences(FILE* fp,char word[]){
     return count;
 }
 
-void ReplaceWord(FILE* fp, char word1[], char word2[],char filename[]){
-    
-    FILE* nf;
-    nf = safe_open("temp.txt","w+");
 
-    char word[50];
-    while(fscanf(fp,"%s",word)==1){
-        if(strcmp(word, word1)==0){
-            fprintf(nf,"%s ",word2);
-        }
-        else{
-            fprintf(nf,"%s ",word);
+void ReplaceWord(FILE* fp, char word1[], char word2[], char filename[]){
+    FILE* temp = safe_open("temp.txt","w");
+
+    char ch;
+    char buffer[100];
+    int i = 0;
+
+    while ((ch = fgetc(fp)) != EOF) {
+        if (isalnum(ch)) {
+            buffer[i++] = ch;
+        } else {
+            buffer[i] = '\0';
+
+            if (i > 0) {
+                if (strcmp(buffer, word1) == 0)
+                    fprintf(temp, "%s", word2);
+                else
+                    fprintf(temp, "%s", buffer);
+            }
+
+            fputc(ch, temp);  // keep spaces/newlines
+            i = 0;
         }
     }
 
-    fclose(nf);
+    fclose(fp);
+    fclose(temp);
 
     remove(filename);
-    rename("temp.txt",filename);
+    rename("temp.txt", filename);
 }
