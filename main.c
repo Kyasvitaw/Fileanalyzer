@@ -36,7 +36,7 @@ void directoryTraversal(const char* path){
         return;
     }
 
-    char dirname[50];
+    char dirname[1024];
     get_directory_name(path,dirname);
 
     while((entry = readdir(directory))!=NULL){
@@ -63,7 +63,7 @@ void directoryTraversal(const char* path){
                     return;
                 }
 
-                char line[200];
+                char line[1024];
                 while(fgets(line,sizeof(line),apf1)!=NULL){
                     line[strcspn(line,"\n")]='\0';
                     if(!strcmp(line,fullPath)){
@@ -185,7 +185,7 @@ int main(int a,char*b[]){
         return 1;
     }
 
-    char dirpath[50];
+    char dirpath[1024];
     fscanf(fi,"%s",dirpath);
 
     char line[100];
@@ -196,7 +196,7 @@ int main(int a,char*b[]){
         toLowerCase(op);
 
         char word[100];
-        char filename[100];//filepath
+        char filename[1024];//filepath
 
         if(strcmp(op,"search")==0){
             //line: search {word} in {filename}
@@ -300,7 +300,7 @@ int main(int a,char*b[]){
         perror("graph.dot");
         return 1;
     }
-    
+
     fprintf(g1,"}\n");
     fclose(g1);
 
