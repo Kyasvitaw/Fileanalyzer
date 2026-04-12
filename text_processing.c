@@ -88,7 +88,6 @@ void ReplaceWord(FILE* fp, char word1[], char word2[], char filename[]){
         }
     }
 
-    fclose(fp);
     fclose(temp);
 
     remove(filename);
