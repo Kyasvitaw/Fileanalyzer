@@ -158,7 +158,7 @@ void directoryTraversal(const char* path){
                     return;
                 }
                 //add a directed edge here
-                fprintf(g,"\"%s\"->\"%s\"\n",dirname,entry->d_name);
+                fprintf(g,"\"%s\"->\"%s\";\n",dirname,entry->d_name);
                 fclose(g);
 
                 directoryTraversal(fullPath);  // recursion
@@ -199,12 +199,10 @@ int main(int a,char*b[]){
         char filename[1024];//filepath
 
         if(strcmp(op,"search")==0){
-            //line: search {word} in {filename}
-            sscanf(line,"%s",word);
-            sscanf(line,"%s",filename);
-            //filename = "IN"
-            //we need to scan again
-            sscanf(line,"%s",filename);
+
+            sscanf(line, "%s %s %*s %s", op, word, filename);
+
+            printf("%s\n",filename);
 
             FILE* f;
             f=fopen(filename,"r");
@@ -227,10 +225,8 @@ int main(int a,char*b[]){
 
         if(strcmp(op,"count")==0){
             //line: count {word} in {filename}
-            sscanf(line,"%s",word);
-            sscanf(line,"%s",filename);
-            sscanf(line,"%s",filename);
-
+            sscanf(line, "%s %s %*s %s", op, word, filename);
+            printf("%s\n",filename);
             FILE* f;
             f=fopen(filename,"r");
             if(f==NULL){
@@ -261,12 +257,10 @@ int main(int a,char*b[]){
 
         if(strcmp(op,"replace")==0){
             //line: replace {word} with {newword} in {filename} 
-            sscanf(line,"%s",word);
+            
             char newword[100];
-            sscanf(line,"%s",newword);
-            sscanf(line,"%s",newword);
-            sscanf(line,"%s",filename);
-            sscanf(line,"%s",filename);
+            
+            sscanf(line, "%s %s %*s %s %*s %s", op, word, newword, filename);
 
             FILE* f;
             f = fopen(filename,"r");
