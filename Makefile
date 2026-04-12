@@ -1,5 +1,6 @@
 a.out : main.o file_analysis.o text_processing.o utils.o
 		gcc main.o file_analysis.o text_processing.o utils.o
+		touch processedfiles.txt
 
 file_analysis.o: file_analysis.c file_analysis.h
 		gcc -c file_analysis.c
@@ -14,4 +15,4 @@ main.o: main.c file_analysis.h utils.h text_processing.h
 		gcc -c main.c
 
 clean:
-		rm *.o a.out *.png graph.dot *.csv
+		rm *.o a.out *.png graph.dot words.txt chars.txt lines.txt processedfiles.txt
