@@ -33,6 +33,7 @@ void directoryTraversal(const char* path){
 
     if(directory == NULL){
         perror("opendir");
+        return;
     }
 
     char dirname[50];
@@ -56,7 +57,12 @@ void directoryTraversal(const char* path){
                 //already processed files
                 int flag=0;
                 FILE* apf1;
-                apf1=safe_open("processedfiles.txt","r+");
+                apf1=fopen("processedfiles.txt","r+");
+                if(apf1==NULL){
+                    perror("processed files");
+                    return;
+                }
+
                 char line[200];
                 while(fgets(line,sizeof(line),apf1)!=NULL){
                     line[strcspn(line,"\n")]='\0';
@@ -72,23 +78,41 @@ void directoryTraversal(const char* path){
                 }
 
                 FILE* apf2;
-                apf2=safe_open("processedfiles.txt","a+");
+                apf2=fopen("processedfiles.txt","a+");
+                if(apf2==NULL){
+                    perror("proceesed files");
+                    return;
+                }
                 fprintf(apf2,"%s\n",fullPath);
                 fclose(apf2);
 
                 //graph.dot
                 FILE* g;
-                g = safe_open("graph.dot","a+");
+                g = fopen("graph.dot","a+");
+                if(g == NULL){
+                    perror("graph.dot");
+                    return;
+                }
+                
                 //add a directed edge here
                 fprintf(g,"\"%s\"->\"%s\";\n",dirname,entry->d_name);
                 fclose(g);
 
                 FILE* file;
-                file=safe_open(fullPath,"r");
+                file=fopen(fullPath,"r");
+                if(file==NULL){
+                    perror("file");
+                    return;
+                }
 
                 //words.csv
                 FILE* w;
-                w=safe_open("words.csv","a+");
+                w=fopen("words.csv","a+");
+                if(w==NULL){
+                    perror("words.csv");
+                    return;
+                }
+
                 int nw=count_words(file);
                 rewind(file);
                 fprintf(w,"%s,%d\n",entry->d_name,nw);
@@ -96,7 +120,12 @@ void directoryTraversal(const char* path){
 
                 //chars.csv
                 FILE* c;
-                c=safe_open("chars.csv","a+");
+                c=fopen("chars.csv","a+");
+                if(c==NULL){
+                    perror("chars.csv");
+                    return;
+                }
+
                 int nc=count_chars(file);
                 rewind(file);
                 fprintf(c,"%s,%d\n",entry->d_name,nc);
@@ -104,7 +133,12 @@ void directoryTraversal(const char* path){
 
                 //lines.csv
                 FILE* l;
-                l=safe_open("lines.csv","a+");
+                l=fopen("lines.csv","a+");
+                if(l==NULL){
+                    perror("lines.csv");
+                    return;
+                }
+
                 int nl=count_lines(file);
                 fprintf(l,"%s,%d\n",entry->d_name,nl);
                 fclose(l);
@@ -118,7 +152,11 @@ void directoryTraversal(const char* path){
 
                 //graph.dot
                 FILE* g;
-                g = safe_open("graph.dot","a+");
+                g = fopen("graph.dot","a+");
+                if(g==NULL){
+                    perror("graph.dot");
+                    return;
+                }
                 //add a directed edge here
                 fprintf(g,"\"%s\"->\"%s\"\n",dirname,entry->d_name);
                 fclose(g);
@@ -140,14 +178,18 @@ int main(int a,char*b[]){
     char input[256];
     strcpy(input,b[1]);
 
-    FILE* f;
-    f = safe_open(input,"r");
+    FILE* fi;
+    fi = fopen(input,"r");
+    if(fi==NULL){
+        perror("input.txt");
+        return 1;
+    }
 
     char dirpath[50];
-    fscanf(f,"%s",dirpath);
+    fscanf(fi,"%s",dirpath);
 
     char line[100];
-    while(fgets(line,sizeof(line),f)){
+    while(fgets(line,sizeof(line),fi)){
 
         char op[10];
         sscanf(line,"%s",op);
@@ -165,7 +207,11 @@ int main(int a,char*b[]){
             sscanf(line,"%s",filename);
 
             FILE* f;
-            f=safe_open(filename,"r");
+            f=fopen(filename,"r");
+            if(f==NULL){
+                perror("file");
+                return 1;
+            }
 
             int flag = FindWord(f,word);
             if(flag == 0){
@@ -186,7 +232,11 @@ int main(int a,char*b[]){
             sscanf(line,"%s",filename);
 
             FILE* f;
-            f=safe_open(filename,"r");
+            f=fopen(filename,"r");
+            if(f==NULL){
+                perror("file");
+                return 1;
+            }
 
             int count = countOccurences(f,word);
 
@@ -219,24 +269,38 @@ int main(int a,char*b[]){
             sscanf(line,"%s",filename);
 
             FILE* f;
-            f = safe_open(filename,"r");
+            f = fopen(filename,"r");
+            if(f==NULL){
+                perror("file");
+                return 1;
+            }
 
             ReplaceWord(f,word,newword,filename);
             fclose(f);
         }
     }
 
-    fclose(f);
+    fclose(fi);
 
     FILE* g;
-    g=safe_open("graph.dot","a+");
+    g=fopen("graph.dot","a+");
+    if(g==NULL){
+        perror("graph.dot");
+        return 1;
+    }
+
     fprintf(g,"digraph G {\n");
     fclose(g);
 
     directoryTraversal(dirpath);
 
     FILE* g1;
-    g1=safe_open("graph.dot","a");
+    g1=fopen("graph.dot","a");
+    if(g1==NULL){
+        perror("graph.dot");
+        return 1;
+    }
+    
     fprintf(g1,"}\n");
     fclose(g1);
 
