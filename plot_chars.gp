@@ -11,4 +11,4 @@ set boxwidth 0.5
 
 set xtics rotate by -45
 
-plot "chars.csv" using 2:xtic(1) title "Chars"
+plot "chars.txt" using 2:xtic(1) title "Chars"

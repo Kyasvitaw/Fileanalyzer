@@ -14,4 +14,4 @@ main.o: main.c file_analysis.h utils.h text_processing.h
 		gcc -c main.c
 
 clean:
-		rm *.o a.out *.png graph.dot
+		rm *.o a.out *.png graph.dot *.csv

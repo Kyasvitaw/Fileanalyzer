@@ -105,42 +105,42 @@ void directoryTraversal(const char* path){
                     return;
                 }
 
-                //words.csv
+                //words.txt
                 FILE* w;
-                w=fopen("words.csv","a+");
+                w=fopen("words.txt","a+");
                 if(w==NULL){
-                    perror("words.csv");
+                    perror("words.txt");
                     return;
                 }
 
                 int nw=count_words(file);
                 rewind(file);
-                fprintf(w,"%s,%d\n",entry->d_name,nw);
+                fprintf(w,"%s %d\n",entry->d_name,nw);
                 fclose(w);
 
-                //chars.csv
+                //chars.txt
                 FILE* c;
-                c=fopen("chars.csv","a+");
+                c=fopen("chars.txt","a+");
                 if(c==NULL){
-                    perror("chars.csv");
+                    perror("chars.txt");
                     return;
                 }
 
                 int nc=count_chars(file);
                 rewind(file);
-                fprintf(c,"%s,%d\n",entry->d_name,nc);
+                fprintf(c,"%s %d\n",entry->d_name,nc);
                 fclose(c);
 
-                //lines.csv
+                //lines.txt
                 FILE* l;
-                l=fopen("lines.csv","a+");
+                l=fopen("lines.txt","a+");
                 if(l==NULL){
-                    perror("lines.csv");
+                    perror("lines.txt");
                     return;
                 }
 
                 int nl=count_lines(file);
-                fprintf(l,"%s,%d\n",entry->d_name,nl);
+                fprintf(l,"%s %d\n",entry->d_name,nl);
                 fclose(l);
 
                 fclose(file);

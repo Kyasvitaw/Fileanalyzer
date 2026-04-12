@@ -11,4 +11,4 @@ set boxwidth 0.5
 
 set xtics rotate by -45
 
-plot "words.csv" using 2:xtic(1) title "Words"
+plot "words.txt" using 2:xtic(1) title "Words"
