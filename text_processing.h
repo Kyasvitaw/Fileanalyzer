@@ -1,4 +1,7 @@
 #include<stdio.h>
+#include<ctype.h>
+#include<string.h>
+#include<stdlib.h>
 
 int FindWord(FILE* fp, char word[]);
 int countOccurences(FILE* fp, char word[]);

@@ -109,7 +109,9 @@ void directoryTraversal(const char *path)
                 }
 
                 // add a directed edge here
-                fprintf(g, "\"%s\"->\"%s\" [shape=note, style=filled, fillcolor=lightyellow];\n", dirname, entry->d_name);
+                //fprintf(g, "\"%s\"->\"%s\" [shape=note, style=filled, fillcolor=lightyellow];\n", dirname, entry->d_name);
+                fprintf(g, "\"%s\" [shape=note, style=filled, fillcolor=lightyellow];\n", entry->d_name);
+                fprintf(g, "\"%s\"->\"%s\";\n", dirname, entry->d_name);
                 fclose(g);
 
                 FILE *file;
@@ -177,7 +179,9 @@ void directoryTraversal(const char *path)
                     return;
                 }
                 // add a directed edge here
-                fprintf(g, "\"%s\"->\"%s\" [shape=folder, style=filled, fillcolor=lightblue];\n", dirname, entry->d_name);
+                //fprintf(g, "\"%s\"->\"%s\" [shape=folder, style=filled, fillcolor=lightblue];\n", dirname, entry->d_name);
+                fprintf(g, "\"%s\" [shape=folder, style=filled, fillcolor=lightblue];\n", entry->d_name);
+                fprintf(g, "\"%s\"->\"%s\";\n", dirname, entry->d_name);
                 fclose(g);
 
                 directoryTraversal(fullPath); // recursion
@@ -226,7 +230,7 @@ int main(int a, char *b[])
             sscanf(line, "%s %s %*s %s", op, word, filename);
 
             printf("%s\n", filename);
-
+            printf("\n");
             FILE *f;
             f = fopen(filename, "r");
             if (f == NULL)
@@ -239,7 +243,7 @@ int main(int a, char *b[])
             int flag = FindWord(f, word);
             if (flag == 0)
             {
-                printf("This word:%s is not there in %s\n", word, filename);
+                printf("word:%s is not there in %s\n", word, filename);
             }
 
             fclose(f);
@@ -259,7 +263,7 @@ int main(int a, char *b[])
             if (f == NULL)
             {
                 perror("file");
-                printf("%s %s in %s %s command failed\n", op, word, filename);
+                printf("%s %s in %s command failed\n", op, word, filename);
                 continue;
             }
 
@@ -311,7 +315,7 @@ int main(int a, char *b[])
             if (count > 0)
             {
                 ReplaceWord(f, word, newword, filename);
-                printf("%s %s with %s in %s command sucessfully executed\n");
+                printf("%s %s with %s in %s command sucessfully executed\n",op,word,newword,filename);
             }
 
             printf("\n");
@@ -322,7 +326,7 @@ int main(int a, char *b[])
 
         if (strcmp(op, "delete") == 0)
         {
-            // line: delete {word} from {filename}
+            // line: delete {word} in {filename}
             sscanf(line, "%s %s %*s %s", op, word, filename);
 
             FILE *f;
@@ -330,7 +334,7 @@ int main(int a, char *b[])
             if (f == NULL)
             {
                 perror("file");
-                printf("%s %s from %s command failed\n", op, word, filename);
+                printf("%s %s in %s command failed\n", op, word, filename);
                 continue;
             }
             int count = countOccurences(f, word);
@@ -341,7 +345,7 @@ int main(int a, char *b[])
             if (count > 0)
             {
                 Deleteword(f, word, filename);
-                printf("%s %s with %s in %s command sucessfully executed\n");
+                printf("%s %s in %scommand sucessfully executed\n",op,word,filename);
             }
 
             printf("_______________________________________________\n");
@@ -424,7 +428,7 @@ int main(int a, char *b[])
         {
             // line: top {num} {filename}
             int num;
-            sscanf(line, "%s %d %s", op, num, filename);
+            sscanf(line, "%s %d %s", op, &num, filename);
 
             FILE *f;
             f = fopen(filename, "r");
@@ -452,6 +456,7 @@ int main(int a, char *b[])
     }
 
     fprintf(g, "digraph G {\n");
+    fprintf(g,"node [style=filled]\n");
     fclose(g);
 
     directoryTraversal(dirpath);

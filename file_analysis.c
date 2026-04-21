@@ -60,7 +60,7 @@ void topNWords(FILE *fp, int N)
     {
 
         cleanWord(word);
-        toLowerStr(word);
+        toLowerCase(word);
 
         if (strlen(word) == 0)
             continue;

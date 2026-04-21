@@ -15,4 +15,4 @@ main.o: main.c file_analysis.h utils.h text_processing.h
 		gcc -c main.c
 
 clean:
-		rm *.o a.out *.png graph.dot words.txt chars.txt lines.txt processedfiles.txt
+		rm -f *.o a.out *.png graph.dot words.txt chars.txt lines.txt processedfiles.txt
