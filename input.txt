@@ -1,3 +1,2 @@
 /home/yasvitaw/extra
-search hi in /home/yasvitaw/extra/dsa/taw.txt
-deletefile /home/yasvitaw/extra/hell.txt
+top 4 /home/yasvitaw/extra/dsa/yas.c

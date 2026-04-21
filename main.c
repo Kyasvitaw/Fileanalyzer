@@ -216,14 +216,14 @@ int main(int a, char *b[])
     char line[100];
     while (fgets(line, sizeof(line), fi))
     {
-        int j=0;
-        while(line[j]=='\n'){
-            line[j]=' ';
-            j++;
-        }
+        // int j=0;
+        // while(line[j]=='\n'){
+        //     line[j]=' ';
+        //     j++;
+        // }
         
         printf("%s\n",line);
-        char op[10];
+        char op[30];
         sscanf(line, "%s", op);
         toLowerCase(op);
 
@@ -362,7 +362,7 @@ int main(int a, char *b[])
         if (strcmp(op, "deletefile") == 0)
         {
             // line: deletefile {filename}
-            // sscanf(line, "%s %s", op, filename);
+            //  sscanf(line, "%s %s", op, filename);
             printf("%s\n",line);
             if (sscanf(line, "%s %s", op, filename) != 2)
             {
@@ -378,8 +378,20 @@ int main(int a, char *b[])
             }
             else
             {
-                perror("Error deleting file"); 
-                printf("File '%s' does not exist or permission denied etc\n", filename);
+                // perror("Error deleting file"); 
+                // printf("File '%s' does not exist or permission denied etc\n", filename);
+                if (errno == ENOENT)
+                {
+                    printf("File '%s' does not exist.\n", filename);
+                }
+                else if (errno == EACCES)
+                {
+                    printf("Permission denied for '%s'.\n", filename);
+                }
+                else
+                {
+                    perror("Error deleting file");
+                }
             }
 
             printf("_______________________________________________\n");
@@ -392,7 +404,7 @@ int main(int a, char *b[])
             sscanf(line, "%s %s %*s %s", op, word, filename);
 
             FILE *f;
-            f = fopen(filename, "r");
+            f = fopen(filename, "a");
             if (f == NULL)
             {
                 perror("file");
