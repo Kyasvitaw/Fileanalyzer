@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <sys/stat.h>
+#include <errno.h>
 #include "file_analysis.h"
 #include "text_processing.h"
 #include "utils.h"
@@ -108,7 +109,7 @@ void directoryTraversal(const char *path)
                 }
 
                 // add a directed edge here
-                fprintf(g, "\"%s\"->\"%s\";\n", dirname, entry->d_name);
+                fprintf(g, "\"%s\"->\"%s\" [shape=note, style=filled, fillcolor=lightyellow];\n", dirname, entry->d_name);
                 fclose(g);
 
                 FILE *file;
@@ -176,7 +177,7 @@ void directoryTraversal(const char *path)
                     return;
                 }
                 // add a directed edge here
-                fprintf(g, "\"%s\"->\"%s\";\n", dirname, entry->d_name);
+                fprintf(g, "\"%s\"->\"%s\" [shape=folder, style=filled, fillcolor=lightblue];\n", dirname, entry->d_name);
                 fclose(g);
 
                 directoryTraversal(fullPath); // recursion
@@ -221,7 +222,7 @@ int main(int a, char *b[])
 
         if (strcmp(op, "search") == 0)
         {
-
+            // line: search {word} in {filename}
             sscanf(line, "%s %s %*s %s", op, word, filename);
 
             printf("%s\n", filename);
@@ -231,7 +232,8 @@ int main(int a, char *b[])
             if (f == NULL)
             {
                 perror("file");
-                return 1;
+                printf("%s %s in %s command failed\n", op, word, filename);
+                continue;
             }
 
             int flag = FindWord(f, word);
@@ -257,7 +259,8 @@ int main(int a, char *b[])
             if (f == NULL)
             {
                 perror("file");
-                return 1;
+                printf("%s %s in %s %s command failed\n", op, word, filename);
+                continue;
             }
 
             int count = countOccurences(f, word);
@@ -297,10 +300,23 @@ int main(int a, char *b[])
             if (f == NULL)
             {
                 perror("file");
-                return 1;
+                printf("%s %s with %s in %s command failed\n", op, word, newword, filename);
+                continue;
+            }
+            int count = countOccurences(f, word);
+            if (count == 0)
+            {
+                printf("There is no %s in %s\n", word, filename);
+            }
+            if (count > 0)
+            {
+                ReplaceWord(f, word, newword, filename);
+                printf("%s %s with %s in %s command sucessfully executed\n");
             }
 
-            ReplaceWord(f, word, newword, filename);
+            printf("\n");
+            printf("_______________________________________________\n");
+            printf("\n");
             fclose(f);
         }
 
@@ -314,10 +330,22 @@ int main(int a, char *b[])
             if (f == NULL)
             {
                 perror("file");
-                return 1;
+                printf("%s %s from %s command failed\n", op, word, filename);
+                continue;
+            }
+            int count = countOccurences(f, word);
+            if (count == 0)
+            {
+                printf("There is no %s in %s\n", word, filename);
+            }
+            if (count > 0)
+            {
+                Deleteword(f, word, filename);
+                printf("%s %s with %s in %s command sucessfully executed\n");
             }
 
-            Deleteword(f, word, filename);
+            printf("_______________________________________________\n");
+            printf("\n");
             fclose(f);
         }
 
@@ -326,7 +354,17 @@ int main(int a, char *b[])
             // line: deletefile {filename}
             sscanf(line, "%s %s", op, filename);
 
-            remove(filename);
+            if (remove(filename) == 0)
+            {
+                printf("File '%s' deleted successfully.\n", filename);
+            }
+            else
+            {
+                printf("File '%s' does not exist or permission denied etc\n", filename);
+            }
+
+            printf("_______________________________________________\n");
+            printf("\n");
         }
 
         if (strcmp(op, "append") == 0)
@@ -339,11 +377,67 @@ int main(int a, char *b[])
             if (f == NULL)
             {
                 perror("file");
-                return 1;
+                printf("%sing %s to %s failed.\n", op, word, filename);
+                continue;
             }
 
             fprintf(f, "%s ", word);
             fclose(f);
+            printf("Word '%s' appended sucessfully to file %s\n", word, filename);
+            printf("_______________________________________________\n");
+            printf("\n");
+        }
+
+        if (strcmp(op, "rename") == 0)
+        {
+            // line: rename {filename} to {newname}
+            char newname[50];
+            sscanf(line, "%s %s %*s %s", op, filename, newname);
+            if (rename(filename, newname) == 0)
+            {
+                printf("File renamed from '%s' to '%s'\n", filename, newname);
+            }
+            else
+            {
+                if (errno == ENOENT)
+                {
+                    printf("Error: Source file '%s' does not exist.\n", filename);
+                }
+                else if (errno == EACCES)
+                {
+                    printf("Error: Permission denied.\n");
+                }
+                else if (errno == EEXIST)
+                {
+                    printf("Error: Destination file '%s' already exists.\n", newname);
+                }
+                else
+                {
+                    perror("Error renaming file");
+                }
+            }
+            printf("_______________________________________________\n");
+            printf("\n");
+        }
+
+        if (strcmp(op, "top") == 0)
+        {
+            // line: top {num} {filename}
+            int num;
+            sscanf(line, "%s %d %s", op, num, filename);
+
+            FILE *f;
+            f = fopen(filename, "r");
+            if (f == NULL)
+            {
+                perror("file");
+                continue;
+            }
+
+            topNWords(f, num);
+            fclose(f);
+            printf("_______________________________________________\n");
+            printf("\n");
         }
     }
 

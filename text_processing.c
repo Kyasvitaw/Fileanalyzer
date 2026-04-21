@@ -109,7 +109,8 @@ void ReplaceWord(FILE *fp, char word1[], char word2[], char filename[])
     rename("temp.txt", filename);
 }
 
-void Deleteword(FILE* fp,char word[],char filename[]){
+void Deleteword(FILE *fp, char word[], char filename[])
+{
     FILE *temp = safe_open("temp.txt", "w");
 
     char ch;

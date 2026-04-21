@@ -1,5 +1,8 @@
 #include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 #include "file_analysis.h"
+#include "utils.h"
 
 int count_lines(FILE *fp)
 {
@@ -44,4 +47,44 @@ int count_chars(FILE *fp)
         }
     }
     return c;
+}
+
+void topNWords(FILE *fp, int N)
+{
+    WordFreq arr[MAX_WORDS];
+    int size = 0;
+
+    char word[MAX_LEN];
+
+    while (fscanf(fp, "%s", word) == 1)
+    {
+
+        cleanWord(word);
+        toLowerStr(word);
+
+        if (strlen(word) == 0)
+            continue;
+
+        int idx = findWord(arr, size, word);
+
+        if (idx == -1)
+        {
+            strcpy(arr[size].word, word);
+            arr[size].count = 1;
+            size++;
+        }
+        else
+        {
+            arr[idx].count++;
+        }
+    }
+
+    // sort by frequency
+    qsort(arr, size, sizeof(WordFreq), cmp);
+
+    printf("\nTop %d words:\n", N);
+    for (int i = 0; i < N && i < size; i++)
+    {
+        printf("%d. %s -> %d\n", i + 1, arr[i].word, arr[i].count);
+    }
 }

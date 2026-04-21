@@ -2,7 +2,7 @@ a.out : main.o file_analysis.o text_processing.o utils.o
 		gcc main.o file_analysis.o text_processing.o utils.o
 		touch processedfiles.txt
 
-file_analysis.o: file_analysis.c file_analysis.h
+file_analysis.o: file_analysis.c file_analysis.h utils.h
 		gcc -c file_analysis.c
 
 utils.o: utils.c utils.h
