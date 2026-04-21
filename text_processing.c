@@ -57,7 +57,7 @@ int countOccurences(FILE *fp, char word[])
             flag = 1;
             count++;
             // freq of word in particular line
-            int freq = 1;
+            int freq = 0;
             int length = strlen(word);
             ptr = ptr + length;
             while (strstr(ptr, word) != NULL)
@@ -76,6 +76,8 @@ void ReplaceWord(FILE *fp, char word1[], char word2[], char filename[])
 {
     FILE *temp = safe_open("temp.txt", "w");
 
+    rewind(fp);  // IMPORTANT
+
     char ch;
     char buffer[100];
     int i = 0;
@@ -84,35 +86,53 @@ void ReplaceWord(FILE *fp, char word1[], char word2[], char filename[])
     {
         if (isalnum(ch))
         {
-            buffer[i++] = ch;
+            if (i < 99)  // prevent overflow
+                buffer[i++] = ch;
         }
         else
         {
-            buffer[i] = '\0';
-
             if (i > 0)
             {
+                buffer[i] = '\0';
+
                 if (strcmp(buffer, word1) == 0)
                     fprintf(temp, "%s", word2);
                 else
                     fprintf(temp, "%s", buffer);
+
+                i = 0;
             }
 
-            fputc(ch, temp); // keep spaces/newlines
-            i = 0;
+            fputc(ch, temp);
         }
+    }
+
+    //  HANDLE LAST WORD
+    if (i > 0)
+    {
+        buffer[i] = '\0';
+
+        if (strcmp(buffer, word1) == 0)
+            fprintf(temp, "%s", word2);
+        else
+            fprintf(temp, "%s", buffer);
     }
 
     fclose(temp);
 
-    remove(filename);
-    rename("temp.txt", filename);
+    if (remove(filename) != 0)
+        perror("Error deleting original file");
+
+    if (rename("temp.txt", filename) != 0)
+        perror("Error renaming temp file");
 }
 
 void Deleteword(FILE *fp, char word[], char filename[])
 {
     FILE *temp = safe_open("temp.txt", "w");
 
+    rewind(fp);  // ensure reading from start
+
     char ch;
     char buffer[100];
     int i = 0;
@@ -121,25 +141,40 @@ void Deleteword(FILE *fp, char word[], char filename[])
     {
         if (isalnum(ch))
         {
-            buffer[i++] = ch;
+            if (i < 99)   //prevent overflow
+                buffer[i++] = ch;
         }
         else
         {
-            buffer[i] = '\0';
-
             if (i > 0)
             {
+                buffer[i] = '\0';
+
+                //only write if NOT the word to delete
                 if (strcmp(buffer, word) != 0)
                     fprintf(temp, "%s", buffer);
+
+                i = 0;
             }
 
-            fputc(ch, temp); // keep spaces/newlines
-            i = 0;
+            fputc(ch, temp); // keep delimiter (space, newline, etc.)
         }
+    }
+
+    // handle last word 
+    if (i > 0)
+    {
+        buffer[i] = '\0';
+
+        if (strcmp(buffer, word) != 0)
+            fprintf(temp, "%s", buffer);
     }
 
     fclose(temp);
 
-    remove(filename);
-    rename("temp.txt", filename);
+    if (remove(filename) != 0)
+        perror("Error deleting original file");
+
+    if (rename("temp.txt", filename) != 0)
+        perror("Error renaming temp file");
 }

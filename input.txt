@@ -1,5 +1,3 @@
 /home/yasvitaw/extra
-search hi in /home/yasvitaw/extra/dsa/graphs/classgraph.cpp
 search hi in /home/yasvitaw/extra/dsa/taw.txt
-count hi in /home/yasvitaw/extra/dsa/taw.txt
-replace hi with bye in /home/yasvitaw/extra/dsa/taw.txt
+deletefile /home/yasvitaw/extra/hell.txt

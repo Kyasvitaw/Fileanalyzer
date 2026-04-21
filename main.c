@@ -216,7 +216,13 @@ int main(int a, char *b[])
     char line[100];
     while (fgets(line, sizeof(line), fi))
     {
-
+        int j=0;
+        while(line[j]=='\n'){
+            line[j]=' ';
+            j++;
+        }
+        
+        printf("%s\n",line);
         char op[10];
         sscanf(line, "%s", op);
         toLowerCase(op);
@@ -356,7 +362,15 @@ int main(int a, char *b[])
         if (strcmp(op, "deletefile") == 0)
         {
             // line: deletefile {filename}
-            sscanf(line, "%s %s", op, filename);
+            // sscanf(line, "%s %s", op, filename);
+            printf("%s\n",line);
+            if (sscanf(line, "%s %s", op, filename) != 2)
+            {
+                printf("Invalid command format. Usage: deletefile <filename>\n");
+                continue;
+            }
+            //remove newline if present
+            filename[strcspn(filename, "\n")] = '\0';
 
             if (remove(filename) == 0)
             {
@@ -364,6 +378,7 @@ int main(int a, char *b[])
             }
             else
             {
+                perror("Error deleting file"); 
                 printf("File '%s' does not exist or permission denied etc\n", filename);
             }
 
