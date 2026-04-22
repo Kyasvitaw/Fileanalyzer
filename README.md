@@ -44,7 +44,9 @@ Commands are read from an input file:
 | `lines.txt` | Line count per file            |
 | `graph.dot` | Graph representation           |
 | `graph.png` | Visualized directory structure |
-
+| `words.png` | bargraph no of words vs files  |
+| `chars.png` | bargraph no of chars vs files  |
+| `lines.png` | bargraph no of lines vs files  |
 ---
 
 ## 🛠️ Requirements
