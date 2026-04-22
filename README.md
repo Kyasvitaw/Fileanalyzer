@@ -24,14 +24,14 @@ This project is a command-line utility written in C that:
 
 Commands are read from an input file:
 
-* `search <word> in <file>`
-* `count <word> in <file>`
-* `replace <word> with <newword> in <file>`
-* `delete <word> in <file>`
-* `append <word> to <file>`
-* `rename <file> to <newname>`
-* `deletefile <file>`
-* `top <n> <file>`
+* `search <word> in <file_path>`
+* `count <word> in <file_path>`
+* `replace <word> with <newword> in <file_path>`
+* `delete <word> in <file_path>`
+* `append <word> to <file_path>`
+* `rename <file_path> to <newfile_path>`
+* `deletefile <file_path>`
+* `top <n> <file_path>`
 
 ---
 
@@ -96,14 +96,14 @@ make clean
 
 ```id="m4n5o6"
 /home/user/data
-search hello in file1.txt
-count test in file2.txt
-replace old with new in file3.txt
-delete temp in file4.txt
-append data to file5.txt
-rename file1.txt to newfile.txt
-deletefile file6.txt
-top 5 file7.txt
+search hello in /home/user/data/file1.txt
+count test in /home/user/data/file2.txt
+replace old with new in /home/user/data/file3.txt
+delete temp in /home/user/data/file4.txt
+append data to /home/user/data/file5.txt
+rename /home/user/data/file1.txt to /home/user/data/newfile.txt
+deletefile /home/user/data/file6.txt
+top 5 /home/user/data/file7.txt
 ```
 
 ---
@@ -132,7 +132,7 @@ top 5 file7.txt
 ## 📷 Output
 
 * 📊 Graph image → `graph.png`
-* 📈 Plots generated using gnuplot
+* 📈 bargraphs generated using gnuplot
 
 ---
 
