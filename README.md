@@ -126,7 +126,6 @@ top 5 file7.txt
 * `processedfiles.txt` is automatically created by the Makefile during build
 * Input files must have correct permissions
 * Graphviz must be installed for graph generation
-* Gnuplot scripts (`plot_*.gp`) should be present
 
 ---
 
